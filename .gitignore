@@ -3,7 +3,7 @@
 /.sass-cache
 
 # Gemfile locks ignored for gems
-/Gemfile.lock
+# /Gemfile.lock
 
 # Generated documentation and assets
 /doc
