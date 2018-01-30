@@ -72,6 +72,7 @@ module MailCatcher extend self
   end
 
   @@defaults = {
+    :auth => false,
     :smtp_ip => '127.0.0.1',
     :smtp_port => '1025',
     :http_ip => '127.0.0.1',
@@ -147,6 +148,10 @@ module MailCatcher extend self
           puts parser
           exit
         end
+
+        parser.on('-a', '--auth', 'Add SMTP-AUTH header') do
+          options[:auth] = true
+        end
       end.parse!
     end
   end
@@ -173,6 +178,7 @@ module MailCatcher extend self
     EventMachine.run do
       # Set up an SMTP server to run within EventMachine
       rescue_port options[:smtp_port] do
+        Smtp.parms = {auth: options[:auth]}
         EventMachine.start_server options[:smtp_ip], options[:smtp_port], Smtp
         puts "==> #{smtp_url}"
       end

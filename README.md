@@ -1,5 +1,75 @@
 # MailCatcher
 
+---
+
+### SMTP-AUTH sample (development mode)
+
+1. run server
+```
+$ bundle install --path vendor/bundle
+$ MAILCATCHER_ENV=development bundle exec mailcatcher -f -a -v
+```
+
+2. open browser
+http://localhost:1080
+
+3. send mail
+```
+$ python examples/send_mail.py
+```
+
+4. evidence
+
+```
+$ curl -s localhost:1080/messages | jq .
+[
+  {
+    "id": 1,
+    "sender": "<user1@example.com> size=279",
+    "recipients": [
+      "<to1@example.com>"
+    ],
+    "subject": "region1 process1 PROCESS_STATE_XXX",
+    "size": "298",
+    "created_at": "2018-01-30T01:28:49+00:00"
+  },
+  {
+    "id": 2,
+    "sender": "<user1@example.com> size=279",
+    "recipients": [
+      "<to1@example.com>"
+    ],
+    "subject": "region1 process1 PROCESS_STATE_XXX",
+    "size": "298",
+    "created_at": "2018-01-30T01:28:51+00:00"
+  }
+]
+```
+
+```
+$ curl -s localhost:1080/messages/1.source
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: region1 process1 PROCESS_STATE_XXX
+From: user1@example.com
+To: to1@example.com
+
+event
+PROCESS_STATE_XXX
+
+datetime
+2018-01-30T01:28:49.303989Z
+
+region
+region1
+
+process
+process1
+```
+
+---
+
 Catches mail and serves it through a dream.
 
 MailCatcher runs a super simple SMTP server which catches any message sent to it to display in a web interface. Run mailcatcher, set your favourite app to deliver to smtp://127.0.0.1:1025 instead of your default SMTP server, then check out http://127.0.0.1:1080 to see the mail that's arrived so far.
